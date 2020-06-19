@@ -1,1 +1,122 @@
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Scanner;
+
+
+/**
+ * 
+ */
+
+/**
+ * @author agilesh
+ *
+ */
+class HuffmanNode
+{
+	int data;
+	char c;
+	HuffmanNode left;
+	HuffmanNode right;
+}
+
+
+
+
+class MyComparator implements Comparator<HuffmanNode>
+{
+	public int compare(HuffmanNode x , HuffmanNode y)
+	{
+		//ascending order
+		return x.data-y.data;
+	}
+}
+
+public class HuffmanUsingHeap {
+
+	public static void printcode(HuffmanNode root , String s)
+	{
+		if(root.left==null && root.right==null && Character.isLetter(root.c))
+		{
+			System.out.println(root.c+"--"+s);
+			return;
+		}
+		printcode(root.left, s+"0");
+		printcode(root.right, s+"1");
+	}
+	
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		String message = sc.next();
+		char[] msgChar = message.toCharArray();
+		
+		ArrayList<Character> characters = new ArrayList<>();
+		for(int i=0;i<msgChar.length;i++)
+		{
+			if(!characters.contains(msgChar[i]))
+			{
+				characters.add(msgChar[i]);
+			}
+		}
+		
+		
+		int[] countOfCharacters = new int[characters.size()];
+		for(int i=0;i<countOfCharacters.length;i++)
+		{
+			countOfCharacters[i]=0;
+		}
+		
+		
+		for(int i=0;i<characters.size();i++)
+		{
+			char check = characters.get(i);
+			for(int j=0;j<msgChar.length;j++)
+			{
+				if(check==msgChar[j])
+				{
+					countOfCharacters[i]++;
+				}
+			}
+		}
+		
+		PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>(new MyComparator());
+		for(int i=0;i<characters.size();i++)
+		{
+			HuffmanNode node = new HuffmanNode();
+			node.data = countOfCharacters[i];
+			node.c = characters.get(i);
+			
+			node.left=null;
+			node.right=null;
+			
+			queue.add(node);
+		}
+		HuffmanNode root = null;
+		
+		while(queue.size()>1)
+		{
+			HuffmanNode x = queue.peek();
+			queue.poll();
+			
+			HuffmanNode y = queue.peek();
+			queue.poll();
+			
+			
+			HuffmanNode newNode  = new HuffmanNode();
+			newNode.data = x.data + y.data;
+			
+			newNode.c = '-';
+			
+			root = newNode;
+			
+			queue.add(newNode);
+			
+			
+			
+		}
+		printcode(root, "");
+	}
+	
+}
